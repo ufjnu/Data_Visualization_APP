@@ -1,0 +1,18 @@
+# 忽略 Python 后端相关
+venv/
+__pycache__/
+*.pyc
+*.log
+.env
+migrations/
+
+# 忽略 Node.js 前端相关
+frontend/node_modules/
+frontend/dist/
+node_modules/
+package-lock.json
+
+# 忽略 IDE 相关文件
+.idea/
+.vscode/
+.DS_Store
