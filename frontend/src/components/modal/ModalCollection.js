@@ -13,7 +13,7 @@ const ModalCollection = ({ uiController }) => {
         visible={modalController.isModalActive("download")}
         onOk={() => {
           modalController.closeModal();
-          uiController.downloadFile(modalData?.format || "csv");
+          //uiController.downloadFile(modalData?.format || "csv");
         }}
         onCancel={() => modalController.closeModal()}
       >

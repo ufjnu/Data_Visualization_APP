@@ -18,60 +18,76 @@ class UIController {
     this.currentDatasetId = null; // 追踪当前数据集
   }
 
-  // 上传文件并更新当前数据集
-  async uploadFile(file, onFileUploaded) {
-    if (!file) {
-      alert("Please select a file first!");
-      return;
+
+  /**
+   * 获取数据（如文件列表、下载文件等）
+   * @param {string} url - 请求的 API 地址
+   * @returns {Promise<any>} - 返回服务器的响应数据
+   */
+  async fetchData(url) {
+    console.log("Fetching data from:", url);
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch data from ${url}`);
+      }
+
+      // 判断是 JSON 还是文件
+      const contentType = response.headers.get("content-type");
+      if (contentType.includes("application/json")) {
+        const data = await response.json();
+        console.log("Fetched JSON data:", data);
+        return data;
+      } else {
+        const blob = await response.blob();
+        console.log("Fetched file:", url);
+        return blob;
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return null;
+    }
+  }
+
+  /**
+   * 改变数据（如上传、删除文件）
+   * @param {string} url - API 地址
+   * @param {string} method - HTTP 方法（"POST"、"PUT"、"DELETE"）
+   * @param {FormData | object} body - 请求的 body 数据（FormData 或 JSON）
+   * @returns {Promise<any>} - 返回服务器响应数据
+   */
+  async modifyData(url, method, body = null) {
+    console.log(`Modifying data: ${method} ${url}`, body);
+
+    const options = {
+      method,
+      headers: {},
+    };
+
+    // 处理 FormData（用于文件上传）
+    if (body instanceof FormData) {
+      options.body = body;
+    } else if (body) {
+      options.body = JSON.stringify(body);
+      options.headers["Content-Type"] = "application/json";
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
-      const response = await fetch("http://127.0.0.1:8000/data/upload/", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(url, options);
       const data = await response.json();
+      console.log("Modify response:", data);
 
       if (data.error) {
-        alert(`Upload failed: ${data.error}`);
-      } else {
-        this.currentDatasetId = data.datasetId;
-        onFileUploaded(data.fileName);
-        alert(`File uploaded successfully! Dataset ID: ${data.datasetId}`);
+        throw new Error(`Error from server: ${data.error}`);
       }
+
+      return data;
     } catch (error) {
-      alert("Upload failed. Please try again.");
+      console.error("Modify operation failed:", error);
+      return null;
     }
   }
 
-  // 下载文件
-  async downloadFile(format) {
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/api/download?format=${format}`);
-      if (!response.ok) {
-        throw new Error("Download failed.");
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `dataset.${format}`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      alert("Download started!");
-    } catch (error) {
-      alert("Download failed. Please try again.");
-    }
-  }
-
-
-  getToolManager() {
-    return this.toolManager;
-  }
 
   handleUserAction(action) {
     switch (action.type) {
