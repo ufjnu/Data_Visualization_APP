@@ -23,14 +23,14 @@ urlpatterns = [
 
 
 from django.urls import path, include
-from data_management.views import get_table_data, save_table_data
-from .views import dimensionality_reduction
+#from data_management.views import get_table_data, save_table_data
+#from .views import dimensionality_reduction
 
 urlpatterns = [
     path('api/', include('data_visualization.urls')),
     path('api/process/', include('data_processing.urls')),
-    path("api/get_table_data/", get_table_data, name="get_table_data"),
-    path("api/save_table_data/", save_table_data, name="save_table_data"),
+    #path("api/get_table_data/", get_table_data, name="get_table_data"),
+    #path("api/save_table_data/", save_table_data, name="save_table_data"),
     path('data/', include('data_management.urls')),
-    path("api/dimensionality_reduction/", dimensionality_reduction, name="dimensionality_reduction"),
+    #path("api/dimensionality_reduction/", dimensionality_reduction, name="dimensionality_reduction"),
 ]

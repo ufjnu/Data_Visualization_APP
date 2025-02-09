@@ -2,9 +2,9 @@ import React from "react";
 import FileUpload from "./FileUpload";
 import FileDownload from "./FileDownload";
 
-const FileManager = ({ uiController }) => {
+const FileComponent = ({ uiController }) => {
     if (!uiController) {
-    console.error("uiController is undefined in FileManager!");
+    console.error("uiController is undefined in FileComponent!");
     return null; // 避免渲染空组件导致错误
   }
 
@@ -17,4 +17,4 @@ const FileManager = ({ uiController }) => {
   );
 };
 
-export default FileManager;
+export default FileComponent;

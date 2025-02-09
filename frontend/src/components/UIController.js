@@ -2,17 +2,19 @@ import ModalController from './modal/ModalController';
 import GraphManager from './graph/GraphManager';
 import GraphWindowController from './graph/GraphWindowController';
 import ToolManager from './tool/ToolManager';
-import Tool from "./tool/Tool";
 import LogManager from "./log/LogManager";
+import DatasetManager from "./file/DatasetManager";
+import TableManager from "./table/TableManager";
 
 class UIController {
   constructor() {
+    this.datasetManager = new DatasetManager();
+    this.tableManager = new TableManager(this.datasetManager);
     this.modalController = new ModalController(); // Manages modal windows
     this.graphManager = new GraphManager(); // Manages graph creation and modification
     this.graphWindowController = new GraphWindowController(this.graphManager); // Manages graph windows
     this.toolManager = new ToolManager(); // Manages UI tools
     this.logManager = new LogManager(); // 确保 logManager 全局可用
-    this.initTools(); // 预先注册工具 需要吗？？？
     this.currentDatasetId = null; // 追踪当前数据集
   }
 
@@ -27,7 +29,7 @@ class UIController {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/upload/", {
+      const response = await fetch("http://127.0.0.1:8000/data/upload/", {
         method: "POST",
         body: formData,
       });
@@ -66,16 +68,6 @@ class UIController {
     }
   }
 
-  // 初始化工具 这个主要用于会打开弹窗的那些 这项暂时不用 看情况需不需要保留
-  initTools() {
-    const dataWindow = new Tool("DataWindow");
-    const logWindow = new Tool("LogWindow");
-    const graphWindow = new Tool("GraphWindow");
-
-    this.toolManager.registerTool("DataWindow", dataWindow);
-    this.toolManager.registerTool("LogWindow", logWindow);
-    this.toolManager.registerTool("GraphWindow", graphWindow);
-  }
 
   getToolManager() {
     return this.toolManager;
