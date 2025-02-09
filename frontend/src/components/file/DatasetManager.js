@@ -24,7 +24,7 @@ class DatasetManager {
     }
   }
 
-  // **获取数据集的列名**（向后端请求）这个是因为curve fitting等五种工具都需要选择两列来计算,这个部分以后应该需要移动到uicontroller
+  // **获取数据集的列名**（向后端请求）这个是因为curve fitting等五种工具都需要选择两列来计算
   async getDatasetColumns(datasetId) {
     try {
       const response = await fetch(`http://127.0.0.1:8000/api/dataset/${datasetId}/columns`);

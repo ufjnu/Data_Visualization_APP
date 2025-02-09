@@ -30,31 +30,33 @@ const FileUpload = ({ uiController }) => {
 
   // 处理文件上传
   const handleUpload = async () => {
-    if (!file) {
-      alert("Please select a file first!");
-      return;
-    }
+  if (!file) {
+    alert("Please select a file first!");
+    return;
+  }
 
-    console.log("Uploading file:", file.name);
+  console.log("Uploading file:", file.name);
 
-    const formData = new FormData();
-    formData.append("file", file);
+  const formData = new FormData();
+  formData.append("file", file);
 
-    try {
-      const data = await uiController.modifyData("http://127.0.0.1:8000/data/upload/", "POST", formData);
+  try {
+    const data = await uiController.modifyData("http://127.0.0.1:8000/data/upload/", "POST", formData);
 
-      if (data) {
-        console.log("Upload successful, new filename:", data.fileName);
-        setFileName(data.fileName);
-        alert(`File uploaded successfully! Dataset ID: ${data.datasetId}`);
-      } else {
-        alert("Upload failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Upload error:", error);
+    if (data) {
+      uiController.currentDatasetId = data.id;  // ✅ 更新当前 datasetId
+      console.log("Upload successful, dataset ID:", data.id);
+      setFileName(data.name);
+      alert(`File uploaded successfully! Dataset ID: ${data.id}`);
+    } else {
       alert("Upload failed. Please try again.");
     }
-  };
+  } catch (error) {
+    console.error("Upload error:", error);
+    alert("Upload failed. Please try again.");
+  }
+};
+
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>

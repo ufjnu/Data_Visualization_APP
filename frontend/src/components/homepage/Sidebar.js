@@ -11,6 +11,7 @@ import {
 import DimReductionModal from "../modal/DimReductionModal";
 import modalController from "../modal/ModalController";
 import NewGraphModal from "../modal/NewGraphModal";
+import ReplicaManagerModal from "../modal/ReplicaManagerModal";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -20,6 +21,11 @@ const Sidebar = ({ uiController, setShowGraph, setShowData, setShowLog, showGrap
   const [openKeys, setOpenKeys] = useState([]); // 控制展开菜单
   const [newGraphModalVisible, setNewGraphModalVisible] = useState(false);
   const [dimReductionModalVisible, setDimReductionModalVisible] = useState(false);
+  const [replicasModalVisible, setReplicasModalVisible] = useState(false);
+
+    // ✅ 获取当前数据集 ID
+  const datasetId = uiController.currentDatasetId;
+  console.log("📌 Current datasetId:", datasetId);
 
   const handleOpenChange = (keys) => {
     setOpenKeys(keys);
@@ -59,6 +65,14 @@ const Sidebar = ({ uiController, setShowGraph, setShowData, setShowLog, showGrap
           {showLog ? "Close Log Window" : "Open Log Window"}
         </Menu.Item>
 
+        <Menu.Item//修改中 文件管理
+          key="dataCopyManagement"
+          icon={<SettingOutlined />}
+          onClick={() => setReplicasModalVisible(true)}
+        >
+          Data Copy Management
+        </Menu.Item>
+
         {/* Graph Manager */}
         <SubMenu key="graphManager" icon={<BarChartOutlined />} title="Graph Manager">
           <Menu.Item key="newGraph" onClick={() => setNewGraphModalVisible(true)}>
@@ -67,7 +81,7 @@ const Sidebar = ({ uiController, setShowGraph, setShowData, setShowLog, showGrap
         </SubMenu>
 
         {/* Data Processing */}
-        <SubMenu key="dataProcessing" icon={<SettingOutlined />} title="Data Processing">
+        <SubMenu key="dataProcessing" icon={<BarChartOutlined />} title="Data Processing">
           <Menu.Item key="dimReduction" onClick={() => setDimReductionModalVisible(true)}>
             Dimensionality Reduction
           </Menu.Item>
@@ -94,6 +108,14 @@ const Sidebar = ({ uiController, setShowGraph, setShowData, setShowLog, showGrap
            onClose={() => setDimReductionModalVisible(false)}
            onUpdateDataset={(newData) => console.log("Updated dataset:", newData)}
            logAction={(log) => console.log("Log:", log)}
+       />
+
+       {/* data copy manage Modal */}
+       <ReplicaManagerModal
+           visible={replicasModalVisible}
+           onClose={() => setReplicasModalVisible(false)}
+           uiController={uiController}
+           datasetId={datasetId}
        />
 
     </Sider>

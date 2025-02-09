@@ -177,6 +177,15 @@ class UIController {
     return this.logManager;
   }
 
+  setDatasetId(datasetId) {
+    console.log("📌 Setting dataset ID:", datasetId);
+    this.currentDatasetId = datasetId;
+  }
+
+  getDatasetId() {
+    return this.currentDatasetId;
+  }
+
 }
 
 export default UIController;
